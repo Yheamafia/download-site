@@ -1,142 +1,47 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>تحميل البرنامج</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
-    body {
-      margin: 0;
-      height: 100vh;
-      font-family: 'Roboto', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #1f1c2c, #928dab);
-      overflow: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1950&q=80') no-repeat center center/cover;
-      opacity: 0.3;
-      z-index: 0;
-    }
-
-    .box {
-      position: relative;
-      z-index: 1;
-      background: rgba(0,0,0,0.75);
-      border-radius: 20px;
-      padding: 40px 30px;
-      width: 380px;
-      text-align: center;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.7);
-      backdrop-filter: blur(8px);
-      color: #fff;
-    }
-
-    h2 {
-      margin-bottom: 12px;
-      font-size: 22px;
-      color: #facc15;
-      text-shadow: 0 2px 8px #000;
-    }
-
-    p {
-      font-size: 15px;
-      margin-bottom: 25px;
-      color: #cbd5f5;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: bold;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    button:hover:not(:disabled) {
-      transform: scale(1.05);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    }
-
-    .sub { background: #dc2626; color: #fff; }
-    .like { background: #2563eb; color: #fff; }
-    .unlock { background: #16a34a; color: #fff; }
-    .download { background: #facc15; color: #000; font-weight: bold; }
-
-    .step { font-size: 13px; color: #94a3b8; margin-top: 6px; min-height: 18px; }
-    .footer { margin-top: 18px; font-size: 12px; color: #64748b; }
-    .hidden { display: none; }
-  </style>
-</head>
-<body>
-
-<div class="box">
-  <h2>🔒 تحميل البرنامج</h2>
-  <p>اتبع جميع الخطوات بالترتيب لفتح رابط التحميل</p>
-
-  <button class="sub" onclick="stepSubscribe()">1️⃣ اشترك بالقناة</button>
-  <div id="s1" class="step">❌ لم تنفذ</div>
-
-  <button class="like" onclick="stepLike()" disabled>2️⃣ اعمل لايك للفيديو</button>
-  <div id="s2" class="step">⏳ انتظر الخطوة الأولى</div>
-
-  <button class="unlock" onclick="stepConfirm()" disabled>3️⃣ تأكيد لإظهار التحميل</button>
-  <div id="s3" class="step">⏳ انتظر الخطوات السابقة</div>
-
-  <a id="download" href="https://sendgb.com/yWUV8LwHInO" target="_blank" class="hidden">
-    <button class="download">⬇ تحميل البرنامج</button>
-  </a>
-
-  <div class="footer">© YHEAEBARON</div>
-</div>
-
 <script>
-  let subscribed = false;
-  let liked = false;
+  let steps = {
+    subscribed: false,
+    liked: false,
+    confirmed: false
+  };
 
   function stepSubscribe() {
+    if (steps.subscribed) return;
     window.open('https://www.youtube.com/@YHEAEBARON?sub_confirmation=1', '_blank');
-    subscribed = true;
+    steps.subscribed = true;
     document.getElementById('s1').innerText = '✅ تم الاشتراك';
     document.querySelector('.like').disabled = false;
     document.getElementById('s2').innerText = '❌ لم يتم';
   }
 
   function stepLike() {
-    if(!subscribed) return;
+    if (!steps.subscribed) {
+      alert('يجب الاشتراك أولاً!');
+      return;
+    }
+    if (steps.liked) return;
     window.open('https://www.youtube.com/watch?v=Uhsg5RmdK6c', '_blank');
-    liked = true;
+    steps.liked = true;
     document.getElementById('s2').innerText = '✅ تم اللايك';
     document.querySelector('.unlock').disabled = false;
     document.getElementById('s3').innerText = '❌ لم يتم';
   }
 
   function stepConfirm() {
-    if (subscribed && liked) {
-      document.getElementById('s3').innerText = '✅ تم التأكيد';
-      document.getElementById('download').classList.remove('hidden');
-    } else {
+    if (!steps.subscribed || !steps.liked) {
       alert('يجب تنفيذ جميع الخطوات أولاً!');
+      return;
     }
+    steps.confirmed = true;
+    document.getElementById('s3').innerText = '✅ تم التأكيد';
+    document.getElementById('download').classList.remove('hidden');
   }
-</script>
 
-</body>
-</html>
-.
+  // منع تحميل الزر قبل التأكيد
+  document.querySelector('.download').addEventListener('click', function(e){
+    if (!steps.confirmed) {
+      e.preventDefault();
+      alert('لا يمكنك التحميل قبل تنفيذ جميع الخطوات!');
+    }
+  });
+</script>
