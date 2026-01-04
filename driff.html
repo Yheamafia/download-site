@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تحميل البرنامج</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a, #020617);
+      color: #fff;
+      font-family: Tahoma, Arial;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .box {
+      background: rgba(2, 6, 23, 0.95);
+      padding: 35px 25px;
+      border-radius: 16px;
+      width: 340px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0,0,0,.7);
+    }
+    h2 {
+      margin-bottom: 10px;
+      font-size: 22px;
+    }
+    p {
+      font-size: 14px;
+      color: #cbd5f5;
+      margin-bottom: 20px;
+    }
+    button {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: transform .15s, opacity .15s;
+    }
+    button:hover { transform: scale(1.02); opacity: .9; }
+    .sub { background: #dc2626; color: #fff; }
+    .like { background: #2563eb; color: #fff; }
+    .unlock { background: #16a34a; color: #fff; }
+    .download { background: #facc15; color: #000; font-weight: bold; }
+    .hidden { display: none; }
+    .timer { margin-top: 12px; font-size: 14px; color: #94a3b8; }
+    .footer { margin-top: 18px; font-size: 12px; color: #64748b; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>🔒 تحميل البرنامج</h2>
+  <p>ادعمنا بالاشتراك واللايك لفتح رابط التحميل</p>
+
+  <a href="https://www.youtube.com/@YHEAEBARON?sub_confirmation=1" target="_blank">
+    <button class="sub">📺 اشترك في القناة</button>
+  </a>
+
+  <a href="https://www.youtube.com/watch?v=Uhsg5RmdK6c" target="_blank">
+    <button class="like">👍 اعمل لايك للفيديو</button>
+  </a>
+
+  <button class="unlock" onclick="startTimer()">✔ تم، متابعة</button>
+
+  <div id="timer" class="timer"></div>
+
+  <a id="download" href="https://sendgb.com/yWUV8LwHInO" class="hidden" target="_blank">
+    <button class="download">⬇ تحميل البرنامج الآن</button>
+  </a>
+
+  <div class="footer">© YHEAEBARON</div>
+</div>
+
+<script>
+  let started = false;
+  function startTimer() {
+    if (started) return;
+    started = true;
+    let seconds = 10;
+    const timer = document.getElementById('timer');
+    const download = document.getElementById('download');
+
+    const interval = setInterval(() => {
+      timer.innerText = `⏳ انتظر ${seconds} ثواني...`;
+      seconds--;
+      if (seconds < 0) {
+        clearInterval(interval);
+        timer.innerText = '✅ تم فتح رابط التحميل';
+        download.classList.remove('hidden');
+      }
+    }, 1000);
+  }
+</script>
+
+</body>
+</html>
