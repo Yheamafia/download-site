@@ -107,51 +107,34 @@
 </div>
 
 <script>
-  let steps = {
-    subscribed: false,
-    liked: false,
-    confirmed: false
-  };
+  let subscribed = false;
+  let liked = false;
 
   function stepSubscribe() {
-    if (steps.subscribed) return;
     window.open('https://www.youtube.com/@YHEAEBARON?sub_confirmation=1', '_blank');
-    steps.subscribed = true;
+    subscribed = true;
     document.getElementById('s1').innerText = '✅ تم الاشتراك';
     document.querySelector('.like').disabled = false;
     document.getElementById('s2').innerText = '❌ لم يتم';
   }
 
   function stepLike() {
-    if (!steps.subscribed) {
-      alert('يجب الاشتراك أولاً!');
-      return;
-    }
-    if (steps.liked) return;
+    if(!subscribed) return;
     window.open('https://www.youtube.com/watch?v=Uhsg5RmdK6c', '_blank');
-    steps.liked = true;
+    liked = true;
     document.getElementById('s2').innerText = '✅ تم اللايك';
     document.querySelector('.unlock').disabled = false;
     document.getElementById('s3').innerText = '❌ لم يتم';
   }
 
   function stepConfirm() {
-    if (!steps.subscribed || !steps.liked) {
+    if (subscribed && liked) {
+      document.getElementById('s3').innerText = '✅ تم التأكيد';
+      document.getElementById('download').classList.remove('hidden');
+    } else {
       alert('يجب تنفيذ جميع الخطوات أولاً!');
-      return;
     }
-    steps.confirmed = true;
-    document.getElementById('s3').innerText = '✅ تم التأكيد';
-    document.getElementById('download').classList.remove('hidden');
   }
-
-  // منع تحميل الزر قبل التأكيد
-  document.querySelector('.download').addEventListener('click', function(e){
-    if (!steps.confirmed) {
-      e.preventDefault();
-      alert('لا يمكنك التحميل قبل تنفيذ جميع الخطوات!');
-    }
-  });
 </script>
 
 </body>
