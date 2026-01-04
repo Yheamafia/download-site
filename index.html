@@ -39,40 +39,11 @@
       color: #fff;
     }
 
-    h2 {
-      margin-bottom: 12px;
-      font-size: 22px;
-      color: #facc15;
-      text-shadow: 0 2px 8px #000;
-    }
-
-    p {
-      font-size: 15px;
-      margin-bottom: 25px;
-      color: #cbd5f5;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: bold;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    button:hover:not(:disabled) {
-      transform: scale(1.05);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    }
+    h2 { margin-bottom: 12px; font-size: 22px; color: #facc15; text-shadow: 0 2px 8px #000; }
+    p { font-size: 15px; margin-bottom: 25px; color: #cbd5f5; }
+    button { width: 100%; padding: 14px; margin: 10px 0; border: none; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: bold; transition: transform 0.15s, box-shadow 0.15s; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
 
     .sub { background: #dc2626; color: #fff; }
     .like { background: #2563eb; color: #fff; }
@@ -90,13 +61,13 @@
   <h2>🔒 تحميل البرنامج</h2>
   <p>اتبع جميع الخطوات بالترتيب لفتح رابط التحميل</p>
 
-  <button class="sub" onclick="stepSubscribe()">1️⃣ اشترك بالقناة</button>
+  <button id="btnSubscribe" class="sub">1️⃣ اشترك بالقناة</button>
   <div id="s1" class="step">❌ لم تنفذ</div>
 
-  <button class="like" onclick="stepLike()" disabled>2️⃣ اعمل لايك للفيديو</button>
+  <button id="btnLike" class="like" disabled>2️⃣ اعمل لايك للفيديو</button>
   <div id="s2" class="step">⏳ انتظر الخطوة الأولى</div>
 
-  <button class="unlock" onclick="stepConfirm()" disabled>3️⃣ تأكيد لإظهار التحميل</button>
+  <button id="btnConfirm" class="unlock" disabled>3️⃣ تأكيد لإظهار التحميل</button>
   <div id="s3" class="step">⏳ انتظر الخطوات السابقة</div>
 
   <a id="download" href="https://sendgb.com/yWUV8LwHInO" target="_blank" class="hidden">
@@ -107,34 +78,51 @@
 </div>
 
 <script>
-  let subscribed = false;
-  let liked = false;
+(() => {
+  // حماية صارمة: لا يمكن تجاوز الخطوات
+  const btnSubscribe = document.getElementById('btnSubscribe');
+  const btnLike = document.getElementById('btnLike');
+  const btnConfirm = document.getElementById('btnConfirm');
+  const downloadLink = document.getElementById('download');
 
-  function stepSubscribe() {
+  let step1Done = false;
+  let step2Done = false;
+  let step3Done = false;
+
+  btnSubscribe.addEventListener('click', () => {
+    if(step1Done) return;
     window.open('https://www.youtube.com/@YHEAEBARON?sub_confirmation=1', '_blank');
-    subscribed = true;
+    step1Done = true;
     document.getElementById('s1').innerText = '✅ تم الاشتراك';
-    document.querySelector('.like').disabled = false;
+    btnLike.disabled = false;
     document.getElementById('s2').innerText = '❌ لم يتم';
-  }
+  });
 
-  function stepLike() {
-    if(!subscribed) return;
+  btnLike.addEventListener('click', () => {
+    if(!step1Done || step2Done) return;
     window.open('https://www.youtube.com/watch?v=Uhsg5RmdK6c', '_blank');
-    liked = true;
+    step2Done = true;
     document.getElementById('s2').innerText = '✅ تم اللايك';
-    document.querySelector('.unlock').disabled = false;
+    btnConfirm.disabled = false;
     document.getElementById('s3').innerText = '❌ لم يتم';
-  }
+  });
 
-  function stepConfirm() {
-    if (subscribed && liked) {
-      document.getElementById('s3').innerText = '✅ تم التأكيد';
-      document.getElementById('download').classList.remove('hidden');
-    } else {
-      alert('يجب تنفيذ جميع الخطوات أولاً!');
+  btnConfirm.addEventListener('click', () => {
+    if(!step1Done || !step2Done || step3Done) return;
+    step3Done = true;
+    document.getElementById('s3').innerText = '✅ تم التأكيد';
+    downloadLink.classList.remove('hidden');
+  });
+
+  // حماية التحميل ضد التلاعب
+  downloadLink.addEventListener('click', (e) => {
+    if(!step1Done || !step2Done || !step3Done) {
+      e.preventDefault();
+      alert('لا يمكنك التحميل قبل تنفيذ جميع الخطوات!');
     }
-  }
+  });
+
+})();
 </script>
 
 </body>
