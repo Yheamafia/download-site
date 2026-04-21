@@ -69,7 +69,7 @@
 
   <div id="timer" class="timer"></div>
 
-  <a id="download" href="https://sendgb.com/yWUV8LwHInO" class="hidden" target="_blank">
+  <a id="download" href="https://sendgb.com/yc9gU1J3VLN" class="hidden" target="_blank">
     <button class="download">⬇ تحميل البرنامج الآن</button>
   </a>
 
@@ -77,21 +77,41 @@
 </div>
 
 <script>
-  let started = false;
+  let step = 0;
+  let locked = false;
+
   function startTimer() {
-    if (started) return;
-    started = true;
-    let seconds = 10;
+    if (locked) return;
+    locked = true;
+    runStep();
+  }
+
+  function runStep() {
     const timer = document.getElementById('timer');
     const download = document.getElementById('download');
+
+    let seconds = 10;
 
     const interval = setInterval(() => {
       timer.innerText = `⏳ انتظر ${seconds} ثواني...`;
       seconds--;
+
       if (seconds < 0) {
         clearInterval(interval);
-        timer.innerText = '✅ تم فتح رابط التحميل';
-        download.classList.remove('hidden');
+
+        step++;
+
+        if (step === 1) {
+          timer.innerText = '✔ تم الخطوة الأولى، استمر...';
+          setTimeout(() => {
+            locked = false;
+          }, 500);
+        }
+
+        if (step === 2) {
+          timer.innerText = '✔ تم التحقق، تم فتح رابط التحميل';
+          download.classList.remove('hidden');
+        }
       }
     }, 1000);
   }
